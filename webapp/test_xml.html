@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+	//{} 是用来定义对象,以创建相应的解析器
+	var Note={to:"",from:"",heading:"",body:""}
+	var XML={};
+	
+	//这个方法判断是什么浏览器(360的急速模式不知道怎么判断)
+	XML.newInstance=function(){
+		if (document.implementation && document.implementation.createDocument){ //判断是标准浏览器(Firefox, Mozilla, Opera, etc)
+			return document.implementation.createDocument('','',null) //返回标准浏览器的 xlm文档解析器
+		}else{
+			return new ActiveXObject("Microsoft.XMLDOM");  //IE的xlm文档解析器 , 创建文档操作对象 
+			//return new ActiveXObject("MSXML2.DOMDocument");  //2代解析器适用于高版本IE
+		}
+	}
+	
+	//这个方法是用来调用load加载xlm文件的中间环节(这个方法可以省略,直接在下面的方法中load("test_xml.xml"))
+	XML.Document = function(url){
+		var xmlDoc = XML.newInstance();
+		xmlDoc.async = false;  //同步
+		xmlDoc.load(url); //加载传递进来的文件,形成文档数
+		return xmlDoc; 
+	}
+	
+	//给自定义的Note对象的属性赋值(找到xml中的节点和值与Note对象对应起来)
+	function  printXML(){
+		var xmlDoc = XML.Document("test_xml.xml"); //获得XML文档解析对象
+		var root = xmlDoc.documentElement;   //得到根节点
+		//alert(root.tagName); //根节点的name属性
+		var nodes = root.childNodes; //获得子节点,子节点包含在根节点中(这取到的是一个数组)
+		for (var i=0;  i<nodes.length;  i++){
+			//alert(nodes[i].tagName);
+			if(nodes[i].firstChild.nodeType == 3){    //Node.TEXT_NODE = 3;    // Text  //判断找出文本标签
+				//alert(nodes[i].firstChild.nodeValue);	
+				for(var property in Note){ //取Note对象中所有的属性的名称 , Note对象是上面自定义的
+					//alert("property: "+property);
+					if(property==nodes[i].tagName){ // Note对象属性名称和xml文件中节点名称一致的话给Note对象的属性赋值
+						Note[property] = nodes[i].firstChild.nodeValue; //Note对象中存放的就是xlm标签节点中存放的信息(不能叫值应该叫文本标签)
+						//alert(Note[property]); 
+					}
+				} 
+			}
+		}
+		
+		for(var property in Note){
+			alert(Note[property]);
+		}
+	}
+	
+</script>
+
+</head>
+<body onload="printXML();">
+
+</body>
+</html>

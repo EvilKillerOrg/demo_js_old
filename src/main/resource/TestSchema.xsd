@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+	targetNamespace="http://www.ek.com/TestSchema"
+	xmlns:tns="http://www.ek.com/TestSchema" 
+	elementFormDefault="qualified">
+
+
+    <element name="note" type="tns:rootType"></element><!-- tns是名称空间(targetNamespace) -->
+    
+    <complexType name="rootType">
+    	<sequence>
+    		<element name="description" type="string" maxOccurs="1" minOccurs="0"></element>
+    		<element name="to" type="string"></element>
+    		<element name="from" type="string"></element>
+    		<element name="heading" type="string"></element>
+    		<element name="body" type="string"></element>
+    	</sequence>
+    </complexType>
+</schema>

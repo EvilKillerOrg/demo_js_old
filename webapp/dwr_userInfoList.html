@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript" src="dwr/engine.js"></script>
+<script type="text/javascript" src="dwr/util.js"></script>
+<script type="text/javascript" src="dwr/interface/UserInfoAction.js"></script>
+<script type="text/javascript" src="js/dwr_userinfo.js"></script>
+
+
+
+
+<script type="text/javascript">
+// 不能再静态页面间传值(传UUID)所以用了DIV , 要传值除非用jsp
+
+//list div 显示 add div 隐藏
+	function showListDiv(){
+		$(list).style.display=""; 
+		 loadData(); //加载初始化值
+		 $(add).style.display="none"; 
+	}
+	
+	
+	
+//list div 隐藏 add div 显示	
+	function showAddDiv(){
+		$(list).style.display="none"; 
+		$(add).style.display=""; 
+		var user = {username:'' , password:'' };
+		dwr.util.setValues(user); //点add的时候把域中的内容清空
+	}
+	
+	
+	
+	//list div 隐藏 add div 显示
+	function showUpdateDiv(){
+		$(list).style.display="none"; 
+		$(add).style.display=""; 
+		
+		var uuids = document.getElementsByName("uuid");
+		var uuid= "";
+		if(uuids){
+			if(uuids.length){ //有length 说明是选了个
+				for(var i=0; i<uuids.length; i++){
+					if(uuids[i].checked){
+						uuid = uuids[i].value; //得到的是最后一个
+					}
+				}
+			}else{
+				if(uuids.checked){ //没有length 说明只有一个直接判断一下是否被选中
+					uuid = uuids.value;  
+				}
+			}
+		}
+		if(uuid!=''){
+			var setFormData = function(data){
+				dwr.util.setValues(data); 
+				$(update_uuid).value=data.uuid;
+			}
+			UserInfoAction.getUserById(uuid,setFormData)
+			$(dataSubmit).onclick=saveUpdateUserInfo;
+		}
+	}
+</script>
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+	function loadData(){
+		var loadDataToTable = function(dataList){
+			var titleNames = ['checkbox' , 'username' , 'password'];
+			InitialTable.loadDataToTable("my_tbody",dataList,titleNames);
+		} 
+		UserInfoAction.findAllUserInfo(loadDataToTable);
+	}
+</script>
+
+
+
+
+
+<script type="text/javascript">
+/*
+	function saveUserInfo(){
+		var user = {uuid:'' , username:'' , password:'' };
+		
+		user.username = addform.username.value; //有表单时 js的写法
+		user.password = addform.password.value; //有表单时 js的写法
+		
+		UserInfoAction.saveUserInfo(user);
+	}
+ */	
+ 
+	function saveUserInfo(){
+		var user = {username:'' , password:'' };
+		dwr.util.getValues(user); //这是DWRUtil 的写法 (域必须有id)
+		
+		UserInfoAction.saveUserInfo(user);
+		
+		InitialTable.resetTable("my_tbody")
+		showListDiv();
+	}
+</script>
+
+
+
+
+
+<script type="text/javascript">
+function saveUpdateUserInfo(){
+	var user = {uuid:'' , username:'' , password:'' };
+	dwr.util.getValues(user);
+	 
+	user.uuid = $(update_uuid).value;
+	
+	UserInfoAction.updateUserInof(user);
+	
+	InitialTable.resetTable("my_tbody")
+	showListDiv();
+}
+
+
+</script>
+</head>
+
+<body onload="showListDiv();">
+
+<div id="list"  style="display:none"> 
+	<table id="mytable"  align="center" border="1" width="70%">
+		<tbody>
+			<tr>
+				<td><input type="button" name="button1" value="Add" onclick="showAddDiv();"></td>
+				<td><input type="button" name="button2" value="Updata" onclick="showUpdateDiv();"></td>
+				<td><input type="button" name="button3" value="Delete"></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>&nbsp;UserName</td>
+				<td>&nbsp;Password</td>
+			</tr>
+		</tbody>
+		<tbody id="my_tbody">
+		
+		</tbody>
+	</table>
+</div>
+
+
+
+
+
+
+
+
+
+<div id="add" style="display:none"> 
+	<!-- 
+	<form action="dwr_userInfoList.html"  method="post" name="addform" onsubmit="saveUserInfo();">
+	-->
+		<table align="center" width="50%" border="1">
+			<tr>
+				<td>&nbsp;UserName</td>
+				<td>&nbsp;<input id="username"  type="text" name="username">
+									<input id="update_uuid"  type="hidden" name="uuid"  value="">
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;Password</td>
+				<td>&nbsp;<input id="password"  type="text" name="password"></td>
+			</tr>
+			<tr>
+				<!--  
+				<td>&nbsp;<input type="submit" name="button1" value="Submit"></td>
+				-->
+				<td>&nbsp;<input id="dataSubmit"  type="button" name="button1" value="Submit" onclick="saveUserInfo();"></td>
+				<td>&nbsp;<input type="reset" name="button2" value="Reset"></td>
+			</tr>
+		</table>
+	<!-- 
+	</form>
+	-->
+</div>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

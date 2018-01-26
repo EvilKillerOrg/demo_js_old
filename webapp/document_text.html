@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+
+var USER = {username:"abc" , password:"def"};
+var userList = [USER,USER,USER,USER,USER]
+
+function getTable(){
+	try{
+		//var tableTag = document.getElementsByTagName("table");
+		//alert(tableTag.length);
+		
+		var mytable = document.getElementById("mytable"); //找到table
+		//alert(mytable.width);
+		var trTag = mytable.insertRow(); //加一行(第一行)
+		var tdTag1 = trTag.insertCell(); //加一列(第一列)
+		tdTag1.insertAdjacentText("afterBegin"," ");//在td的中间位置(afterBegin)添加文本,位置详见文档html语言参考(第一行第一列显示空)
+		
+		for(var user_property in USER){ //迭代USERS对象有几个属性循环几次(把USER中的对象都打印出来)
+			var tdTag = trTag.insertCell(); 
+			tdTag.insertAdjacentText("afterBegin",USER[user_property]); //USER[user_property] 这个语法就相当于 ${user.username}
+		}
+	}catch(e){
+		alert(e.message);
+	}
+}
+
+ //进入页面默认加与userList 中长度的相同的行(userList中存的是USER对象)
+
+function getTable2(userList){
+	try{
+		if( !(userList instanceof Array) ){
+			return;
+		}
+	
+		for(var i=0; i<userList.length; i++){
+			var mytable = document.getElementById("mytable"); //找到table
+			var trTag = mytable.insertRow(); //加一行(第一行)
+			var tdTag1 = trTag.insertCell(); //加一列(第一列)
+			tdTag1.insertAdjacentText("afterBegin"," ");//在td的中间位置(afterBegin)添加文本,位置详见文档html语言参考(第一行第一列显示空)
+			
+			for(var user_property in userList[i]){ //把userList中的USER迭代取出来 userList[i]就等于userList中第i个USER //迭代USERS对象有几个属性循环几次(把USER中的对象都打印出来)
+				var tdTag = trTag.insertCell(); 
+				tdTag.insertAdjacentText("afterBegin", userList[i][user_property]);//userList[i][user_property] 就相当于 USER[user_property] //USER[user_property] 这个语法就相当于 ${user.username}
+			}
+			
+		}
+		
+	 
+	}catch(e){
+		alert(e.message);
+	}
+}
+</script>
+</head>
+<body onload="getTable2(userList);">
+	<p align="center">
+		<input type="button" name="add" value="add" onclick="getTable();">
+	</p>
+	<table id="mytable"  width="50%" border="1" align="center">
+		<tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;UserName</td>
+			<td>&nbsp;Password</td>
+		</tr>
+	</table>
+	
+	<h1 id=""></h1>
+	
+</body>
+</html>

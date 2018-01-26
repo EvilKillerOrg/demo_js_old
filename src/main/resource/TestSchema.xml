@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<note xmlns="http://www.ek.com/TestSchema" 
+		  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		  xsi:schemaLocation="http://www.ek.com/TestSchema TestSchema.xsd ">
+	<description>description</description> <!-- 可选的属性 -->
+	<to>to</to>
+	<from>from</from>
+	<heading>heading</heading>
+	<body>body</body>
+</note>
